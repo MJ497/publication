@@ -13,6 +13,7 @@
     <style>
         body {
             font-family: 'Cormorant Garamond', serif;
+            outline: none;
         }
         .btn-primary {
             background-color: #D2B48C;
@@ -37,13 +38,31 @@
         .header-link:hover:after {
             width: 100%;
         }
+        .modal {
+            display: none !important;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body class="bg-white text-black">
     <!-- Navigation -->
-    <nav class="py-6 px-4 md:px-12 lg:px-24 flex justify-between items-center border-b border-gray-200 relative">
-        <div class="text-2xl font-bold">Olasunkanmi Salami's Publication</div>
-        <div class="mobile-nav hidden absolute top-full left-0 w-full bg-white shadow-lg flex-col space-y-4 py-6 px-4 z-50 md:static md:flex md:flex-row md:space-y-0 md:space-x-8 md:bg-transparent md:shadow-none md:py-0 md:px-0">
+    <nav class="py-6 px-4 md:px-12 lg:px-24 flex items-center border-b border-gray-200 relative">
+        <div class="flex-1 text-2xl font-bold">Olasunkanmi Salami's Publication</div>
+        <div class="mobile-nav hidden absolute top-full left-0 w-full bg-white shadow-lg flex-col space-y-4 py-6 px-4 z-50 md:static md:flex md:flex-row md:space-y-0 md:space-x-8 md:bg-transparent md:shadow-none md:py-0 md:px-0 md:w-auto md:relative md:justify-end">
             <a href="index.html" class="header-link block md:inline">Home</a>
             <a href="publications.html" class="header-link font-bold block md:inline">Publications</a>
             <a href="biography.html" class="header-link block md:inline">Biography</a>
@@ -64,7 +83,7 @@
                 <div class="p-6">
                     <h3 class="text-xl font-bold mb-2">Marriage is honorable</h3>
                     <p class="text-gray-600 mb-4">$14.99</p>
-                    <button onclick="openModal('modal1')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                    <button data-modal="modal1" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
                 </div>
             </div>
             
@@ -74,7 +93,7 @@
                 <div class="p-6">
                     <h3 class="text-xl font-bold mb-2">Balanced Man</h3>
                     <p class="text-gray-600 mb-4">$12.99</p>
-                    <button onclick="openModal('modal2')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                    <button data-modal="modal2" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
                 </div>
             </div>
             
@@ -84,7 +103,7 @@
                 <div class="p-6">
                     <h3 class="text-xl font-bold mb-2">Accepting responsibilities</h3>
                     <p class="text-gray-600 mb-4">$16.99</p>
-                    <button onclick="openModal('modal3')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                    <button data-modal="modal3" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
                 </div>
             </div>
             
@@ -99,7 +118,7 @@
     <!-- Modal 1 -->
     <div id="modal1" class="modal">
         <div class="modal-content">
-            <span class="float-right cursor-pointer" onclick="closeModal('modal1')">&times;</span>
+            <span class="float-right cursor-pointer">&times;</span>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="md:w-1/3">
                     <img src="book1.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
@@ -117,7 +136,7 @@
     <!-- Modal 2 -->
     <div id="modal2" class="modal">
         <div class="modal-content">
-            <span class="float-right cursor-pointer" onclick="closeModal('modal2')">&times;</span>
+            <span class="float-right cursor-pointer">&times;</span>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="md:w-1/3">
                     <img src="book2.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
@@ -135,7 +154,7 @@
     <!-- Modal 3 -->
     <div id="modal3" class="modal">
         <div class="modal-content">
-            <span class="float-right cursor-pointer" onclick="closeModal('modal3')">&times;</span>
+            <span class="float-right cursor-pointer">&times;</span>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="md:w-1/3">
                     <img src="book3.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
@@ -165,6 +184,40 @@
             </div>
         </div>
     </footer>
-    <script src="main.js" defer></script>
+  <script>
+  // Modal open/close logic for all modal triggers and close buttons
+  document.querySelectorAll('button[data-modal]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          var modalId = btn.getAttribute('data-modal');
+          var modal = document.getElementById(modalId);
+          if (modal) {
+              // Use setProperty with 'important' to override stylesheet !important
+              modal.style.setProperty('display', 'block', 'important');
+              modal.setAttribute('aria-hidden', 'false');
+          }
+      });
+  });
+
+  document.querySelectorAll('.modal .float-right').forEach(function(closeBtn) {
+      closeBtn.addEventListener('click', function() {
+          var modal = closeBtn.closest('.modal');
+          if (modal) {
+              modal.style.setProperty('display', 'none', 'important');
+              modal.setAttribute('aria-hidden', 'true');
+          }
+      });
+  });
+
+  // click outside modal-content to close
+  window.addEventListener('click', function(event) {
+      if (event.target.classList && event.target.classList.contains('modal')) {
+          event.target.style.setProperty('display', 'none', 'important');
+          event.target.setAttribute('aria-hidden', 'true');
+      }
+  });
+</script>
+
+    <script src="main.js"></script>
 </body>
 </html>
