@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
             font-family: 'Cormorant Garamond', serif;
@@ -41,15 +40,15 @@
 </head>
 <body class="bg-white text-black">
     <!-- Navigation -->
-    <nav class="py-6 px-4 md:px-12 lg:px-24 flex justify-between items-center border-b border-gray-200">
+    <nav class="py-6 px-4 md:px-12 lg:px-24 flex justify-between items-center border-b border-gray-200 relative">
         <div class="text-2xl font-bold">Olasunkanmi Salami's Publication</div>
-        <div class="hidden md:flex space-x-8">
-            <a href="index.html" class="header-link">Home</a>
-            <a href="publications.html" class="header-link">Publications</a>
-            <a href="biography.html" class="header-link font-bold">Biography</a>
+        <div class="mobile-nav hidden absolute top-full left-0 w-full bg-white shadow-lg flex-col space-y-4 py-6 px-4 z-50 md:static md:flex md:flex-row md:space-y-0 md:space-x-8 md:bg-transparent md:shadow-none md:py-0 md:px-0">
+            <a href="index.html" class="header-link block md:inline">Home</a>
+            <a href="publications.html" class="header-link block md:inline">Publications</a>
+            <a href="biography.html" class="header-link font-bold block md:inline">Biography</a>
         </div>
         <div class="md:hidden">
-            <i data-feather="menu"></i>
+            <i class="fas fa-bars text-2xl cursor-pointer"></i>
         </div>
     </nav>
 
@@ -124,16 +123,13 @@
                 <p>© 2025 All Rights Reserved</p>
             </div>
             <div class="flex space-x-6">
-                <a href="#" class="hover:text-gray-300"><i data-feather="twitter"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="facebook"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="instagram"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="linkedin"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </footer>
-
-    <script>
-        feather.replace();
-    </script>
+    <script src="main.js" defer></script>
 </body>
 </html>
