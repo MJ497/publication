@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications | Olasunkanmi Salami</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .btn-primary {
+            background-color: #D2B48C;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #B8860B;
+        }
+        .header-link {
+            position: relative;
+        }
+        .header-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #D2B48C;
+            transition: width 0.3s ease;
+        }
+        .header-link:hover:after {
+            width: 100%;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-white text-black">
+    <!-- Navigation -->
+    <nav class="py-6 px-4 md:px-12 lg:px-24 flex justify-between items-center border-b border-gray-200">
+        <div class="text-2xl font-bold">Olasunkanmi Salami's Publication</div>
+        <div class="hidden md:flex space-x-8">
+            <a href="index.html" class="header-link">Home</a>
+            <a href="publications.html" class="header-link font-bold">Publications</a>
+            <a href="biography.html" class="header-link">Biography</a>
+        </div>
+        <div class="md:hidden">
+            <i data-feather="menu"></i>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-16 px-4 md:px-12 lg:px-24">
+        <h1 class="text-4xl font-bold mb-12 text-center">My Publications</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Book 1 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/1" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Whispers of the Past</h3>
+                    <p class="text-gray-600 mb-4">$14.99</p>
+                    <button onclick="openModal('modal1')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+            
+            <!-- Book 2 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/2" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Echoes in the Dark</h3>
+                    <p class="text-gray-600 mb-4">$12.99</p>
+                    <button onclick="openModal('modal2')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+            
+            <!-- Book 3 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/3" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">The Last Horizon</h3>
+                    <p class="text-gray-600 mb-4">$16.99</p>
+                    <button onclick="openModal('modal3')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+            
+            <!-- Book 4 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/4" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Silent Rivers</h3>
+                    <p class="text-gray-600 mb-4">$11.99</p>
+                    <button onclick="openModal('modal4')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+            
+            <!-- Book 5 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/5" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Midnight Sonata</h3>
+                    <p class="text-gray-600 mb-4">$13.99</p>
+                    <button onclick="openModal('modal5')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+            
+            <!-- Book 6 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src="http://static.photos/education/640x360/6" alt="Book Cover" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">The Forgotten Path</h3>
+                    <p class="text-gray-600 mb-4">$15.99</p>
+                    <button onclick="openModal('modal6')" class="btn-primary px-4 py-2 rounded text-white font-medium w-full">View Details</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Book Modals -->
+    <!-- Modal 1 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="float-right cursor-pointer" onclick="closeModal('modal1')">&times;</span>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3">
+                    <img src="http://static.photos/education/640x360/1" alt="Book Cover" class="w-full rounded">
+                </div>
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl font-bold mb-4">Whispers of the Past</h2>
+                    <p class="text-xl text-gray-600 mb-4">$14.99</p>
+                    <p class="mb-6">A gripping historical fiction that follows the journey of a young woman uncovering family secrets that span generations. Set against the backdrop of colonial Africa, this novel explores themes of identity, heritage, and the enduring power of memory.</p>
+                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="float-right cursor-pointer" onclick="closeModal('modal2')">&times;</span>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3">
+                    <img src="http://static.photos/education/640x360/2" alt="Book Cover" class="w-full rounded">
+                </div>
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl font-bold mb-4">Echoes in the Dark</h2>
+                    <p class="text-xl text-gray-600 mb-4">$12.99</p>
+                    <p class="mb-6">A psychological thriller that will keep you guessing until the very last page. When a renowned psychiatrist takes on a mysterious patient, he finds himself drawn into a web of deception that challenges his professional judgment and personal sanity.</p>
+                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3 -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="float-right cursor-pointer" onclick="closeModal('modal3')">&times;</span>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3">
+                    <img src="http://static.photos/education/640x360/3" alt="Book Cover" class="w-full rounded">
+                </div>
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl font-bold mb-4">The Last Horizon</h2>
+                    <p class="text-xl text-gray-600 mb-4">$16.99</p>
+                    <p class="mb-6">An epic science fiction adventure that spans galaxies and centuries. As humanity faces its greatest existential threat, a diverse crew of explorers embarks on a desperate mission to find a new home among the stars, encountering wonders and dangers beyond imagination.</p>
+                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 md:px-12 lg:px-24 bg-black text-white">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <div class="text-2xl font-bold mb-4">Olasunkanmi Salami's Publication</div>
+                <p>© 2023 All Rights Reserved</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-gray-300"><i data-feather="twitter"></i></a>
+                <a href="#" class="hover:text-gray-300"><i data-feather="facebook"></i></a>
+                <a href="#" class="hover:text-gray-300"><i data-feather="instagram"></i></a>
+                <a href="#" class="hover:text-gray-300"><i data-feather="linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        feather.replace();
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target.className === "modal") {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
