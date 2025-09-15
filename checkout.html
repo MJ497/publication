@@ -1,188 +1,241 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Olasunkanmi Salami</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-        }
-        .btn-primary {
-            background-color: #D2B48C;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #B8860B;
-        }
-        .header-link {
-            position: relative;
-        }
-        .header-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: #D2B48C;
-            transition: width 0.3s ease;
-        }
-        .header-link:hover:after {
-            width: 100%;
-        }
-    </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Checkout | Olasunkanmi Salami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body { font-family: 'Montserrat', sans-serif; background: #fff; color: #111; }
+    .btn-primary { background-color:#D2B48C; color:#fff; padding:10px 14px; border-radius:8px; display:inline-block; text-decoration:none; }
+    .muted { color:#666; }
+    .card { background:#f8fafb; border-radius:10px; padding:18px; }
+  </style>
 </head>
 <body class="bg-white text-black">
-    <!-- Navigation -->
-    <nav class="relative z-20 py-6 px-4 md:px-12 lg:px-24 flex items-center justify-between w-full">
-      <div class="flex-1 flex items-center font-bold text-white text-lg md:text-2xl">
-        <img src="plogo.png" alt="Logo" class="h-12 w-12 mr-3 object-contain" />
-        Olasunkanmi Salami's Publication
-      </div>
-      <div id="mobile-navigation" class="mobile-nav hidden absolute top-full left-0 w-full bg-white shadow-lg flex-col space-y-4 py-6 px-4 z-50 md:static md:flex md:flex-row md:space-y-0 md:space-x-8 md:bg-transparent md:shadow-none md:py-0 md:px-0 md:w-auto md:relative md:justify-end">
-        <a href="index.html" class="header-link font-bold block md:inline text-black">Home</a>
-        <a href="publications.html" class="header-link block md:inline text-black">Publications</a>
-        <a href="biography.html" class="header-link block md:inline text-black">Biography</a>
-         <a href="video.html" class="header-link font-bold block md:inline text-white">Videos</a>
-      </div>
-      <div class="flex items-center space-x-4 md:space-x-6">
-        <button id="cart-btn" class="relative text-black text-2xl focus:outline-none" aria-label="Cart">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full px-1.5 py-0.5">0</span>
-        </button>
-        <button id="hamburger" class="md:hidden focus:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-navigation">
-          <i class="fas fa-bars text-2xl cursor-pointer text-black" aria-hidden="true"></i>
-        </button>
-      </div>
-    </nav>
+  <nav class="py-6 px-6 md:px-12 lg:px-24 flex items-center justify-between">
+    <div class="flex items-center gap-3 font-bold text-lg">
+      <img src="plogo.png" alt="logo" class="h-10 w-10 object-contain">
+      Olasunkanmi Salami's Publication
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="publications.html" class="muted">Publications</a>
+      <a href="index.html" class="muted">Home</a>
+    </div>
+  </nav>
 
-    <!-- Checkout Section -->
-    <section class="py-16 px-4 md:px-12 lg:px-24">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-bold mb-8">Complete Your Purchase</h1>
-            
-            <div class="flex flex-col lg:flex-row gap-12">
-                <div class="lg:w-2/3">
-                    <div class="bg-gray-50 p-6 rounded-lg mb-8">
-                        <h2 class="text-xl font-bold mb-4">Order Summary</h2>
-                        <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
-                            <div class="flex items-center">
-                                <img src="http://static.photos/education/200x200/1" alt="Book Cover" class="w-16 h-16 object-cover rounded mr-4">
-                                <div>
-                                    <h3 class="font-bold">Marriage is honorable</h3>
-                                    <p class="text-sm text-gray-600">Digital Download</p>
-                                </div>
-                            </div>
-                            <div class="font-bold">$14.99</div>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span>Subtotal</span>
-                            <span>$14.99</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span>Tax</span>
-                            <span>$0.00</span>
-                        </div>
-                        <div class="flex justify-between font-bold text-lg pt-4 border-t border-gray-200">
-                            <span>Total</span>
-                            <span>$14.99</span>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-6 rounded-lg">
-                        <h2 class="text-xl font-bold mb-6">Payment Information</h2>
-                        <form>
-                            <div class="mb-6">
-                                <label class="block mb-2 font-medium">Email</label>
-                                <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="your@email.com">
-                            </div>
-                            
-                            <div class="mb-6">
-                                <label class="block mb-2 font-medium">Card Information</label>
-                                <div class="flex border border-gray-300 rounded overflow-hidden">
-                                    <input type="text" class="px-4 py-2 flex-grow focus:outline-none" placeholder="1234 1234 1234 1234">
-                                    <div class="px-4 py-2 bg-gray-100 flex items-center">
-                                        <i data-feather="credit-card" class="text-gray-600"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4 mb-6">
-                                <div>
-                                    <label class="block mb-2 font-medium">Expiration</label>
-                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="MM/YY">
-                                </div>
-                                <div>
-                                    <label class="block mb-2 font-medium">CVC</label>
-                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="CVC">
-                                </div>
-                            </div>
-                            
-                            <div class="mb-6">
-                                <label class="block mb-2 font-medium">Name on Card</label>
-                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400" placeholder="Full Name">
-                            </div>
-                            
-                            <div class="mb-6">
-                                <label class="flex items-center">
-                                    <input type="checkbox" class="mr-2">
-                                    <span>Save this card for future purchases</span>
-                                </label>
-                            </div>
-                            
-                            <button type="submit" class="btn-primary w-full py-3 rounded text-white font-medium text-lg">Complete Purchase</button>
-                        </form>
-                    </div>
-                </div>
-                
-                <div class="lg:w-1/3">
-                    <div class="bg-gray-50 p-6 rounded-lg sticky top-8">
-                        <h2 class="text-xl font-bold mb-4">Download Instructions</h2>
-                        <p class="mb-4">After completing your purchase, you will receive an email with a download link for your book.</p>
-                        <p class="mb-4">The download will be available in PDF, EPUB, and MOBI formats.</p>
-                        <div class="flex items-center mb-2">
-                            <i data-feather="check-circle" class="text-green-500 mr-2"></i>
-                            <span>DRM-Free</span>
-                        </div>
-                        <div class="flex items-center mb-2">
-                            <i data-feather="check-circle" class="text-green-500 mr-2"></i>
-                            <span>Unlimited Downloads</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i data-feather="check-circle" class="text-green-500 mr-2"></i>
-                            <span>Customer Support</span>
-                        </div>
-                    </div>
-                </div>
+  <section class="py-10 px-6 md:px-12 lg:px-24">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">Complete Your Purchase</h1>
+
+      <div class="flex flex-col lg:flex-row gap-10">
+        <!-- left: order + payment -->
+        <div class="lg:w-2/3 space-y-6">
+          <div class="card">
+            <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+            <div id="order-items" class="space-y-4"></div>
+
+            <div class="mt-4 border-t border-gray-200 pt-4">
+              <div class="flex justify-between mb-2"><span>Subtotal</span><span id="subtotal">₦0.00</span></div>
+              <div class="flex justify-between mb-2"><span>Tax</span><span id="tax">₦0.00</span></div>
+              <div class="flex justify-between font-bold text-lg pt-3"><span>Total</span><span id="total">₦0.00</span></div>
             </div>
+          </div>
+
+          <div class="card">
+            <h2 class="text-xl font-bold mb-4">Payment</h2>
+
+            <!-- Minimal payment area: only email + Paystack button -->
+            <div class="mb-4">
+              <label class="block mb-2 font-medium">Email (required)</label>
+              <input id="customer-email" type="email" class="w-full px-4 py-2 border rounded" placeholder="you@example.com">
+            </div>
+
+            <div class="flex gap-3 items-center">
+              <button id="pay-btn" class="btn-primary" type="button">Pay with Paystack</button>
+              <a href="publications.html" class="px-4 py-2 border rounded text-sm">Continue shopping</a>
+            </div>
+            <div id="payment-msg" class="mt-3 muted text-sm"></div>
+          </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="py-12 px-4 md:px-12 lg:px-24 bg-black text-white">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <div class="text-2xl font-bold mb-4">Olasunkanmi Salami's Publication</div>
-                <p>© 2025 All Rights Reserved</p>
+        <!-- right: download instructions -->
+        <div class="lg:w-1/3">
+          <div class="card sticky top-8">
+            <h2 class="text-xl font-bold mb-3">Download Instructions</h2>
+            <p class="mb-3 muted">After your payment is verified you'll receive instant downloads on this page and (if provided) an email with download links.</p>
+            <p class="mb-3">Files can be delivered as direct PDF downloads (PDF/EPUB/MOBI) — ensure your files are hosted where browsers can fetch them.</p>
+
+            <div class="mt-4 space-y-2">
+              <div class="flex items-center gap-2"><i data-feather="check-circle" class="text-green-500"></i><span>DRM-Free</span></div>
+              <div class="flex items-center gap-2"><i data-feather="check-circle" class="text-green-500"></i><span>Unlimited Downloads</span></div>
+              <div class="flex items-center gap-2"><i data-feather="check-circle" class="text-green-500"></i><span>Customer Support</span></div>
             </div>
-            <div class="flex space-x-6">
-                <a href="#" class="hover:text-gray-300"><i data-feather="twitter"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="facebook"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="instagram"></i></a>
-                <a href="#" class="hover:text-gray-300"><i data-feather="linkedin"></i></a>
-            </div>
+            <div class="mt-6 text-sm muted">Note: For production always verify payment on your server before granting files.</div>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        feather.replace();
-    </script>
+  <footer class="py-8 px-6 md:px-12 lg:px-24 bg-black text-white">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div>© 2025 Olasunkanmi Salami's Publication</div>
+      <div class="flex gap-4"><a href="#" class="text-white"><i data-feather="twitter"></i></a></div>
+    </div>
+  </footer>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    feather.replace();
+
+    const CART_KEY = 'olasunkanmi_cart_v1';
+    function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e){ return []; } }
+    function clearCart(){ localStorage.removeItem(CART_KEY); }
+
+    // Render order items from localStorage
+    function renderOrder() {
+      const items = readCart();
+      const list = document.getElementById('order-items');
+      const subtotalEl = document.getElementById('subtotal');
+      const taxEl = document.getElementById('tax');
+      const totalEl = document.getElementById('total');
+
+      list.innerHTML = '';
+      if (!items || items.length === 0) {
+        list.innerHTML = '<div class="py-6 text-center muted">Your cart is empty — <a href="publications.html">Go back</a></div>';
+        document.getElementById('pay-btn').disabled = true;
+        subtotalEl.textContent = '₦0.00';
+        taxEl.textContent = '₦0.00';
+        totalEl.textContent = '₦0.00';
+        return;
+      }
+
+      let subtotal = 0;
+      items.forEach(it => {
+        const price = parseFloat(it.price || 0);
+        const qty = parseInt(it.qty || 1, 10);
+        subtotal += price * qty;
+
+        const row = document.createElement('div');
+        row.className = 'flex justify-between items-center';
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <img src="${it.thumb || 'book1.jpg'}" alt="" class="w-12 h-12 object-cover rounded">
+            <div>
+              <div class="font-medium">${escapeHtml(it.title)}</div>
+              <div class="text-sm muted">${qty} × ₦${price.toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="font-bold">₦${(price*qty).toFixed(2)}</div>
+        `;
+        list.appendChild(row);
+      });
+
+      const tax = 0.00; // add logic if you need tax
+      const total = subtotal + tax;
+      subtotalEl.textContent = `₦${subtotal.toFixed(2)}`;
+      taxEl.textContent = `₦${tax.toFixed(2)}`;
+      totalEl.textContent = `₦${total.toFixed(2)}`;
+      document.getElementById('pay-btn').disabled = false;
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    renderOrder();
+
+    // PAYSTACK FLOW
+    document.getElementById('pay-btn').addEventListener('click', function() {
+      const cart = readCart();
+      if (!cart.length) return alert('Cart is empty');
+      const email = (document.getElementById('customer-email').value || '').trim();
+      if (!email) {
+        document.getElementById('payment-msg').textContent = 'Please enter your email.';
+        return;
+      }
+      const total = cart.reduce((s,i) => s + (parseFloat(i.price||0) * (i.qty||1)), 0);
+      const amountKobo = Math.round(total * 100); // Naira -> kobo (Paystack expects smallest unit)
+
+      // NOTE: replace with your Paystack public key
+      const PAYSTACK_KEY = 'pk_test_cd5536a98573d218606597cfcb75a963cff8f1a4';
+
+      const handler = PaystackPop.setup({
+        key: PAYSTACK_KEY,
+        email,
+        amount: amountKobo,
+        ref: 'order_' + Date.now(),
+        metadata: {
+          custom_fields: [
+            {display_name: "Cart", variable_name: "cart", value: JSON.stringify(cart)}
+          ]
+        },
+        onClose: function() {
+          document.getElementById('payment-msg').textContent = 'Payment window closed.';
+        },
+        callback: function(response) {
+          // response.reference is the value to verify on server
+          document.getElementById('payment-msg').textContent = 'Payment completed — verifying...';
+          const verifyUrl = 'https://your-project.vercel.app/api/verify-paystack';
+
+          if (verifyUrl && verifyUrl !== 'VERIFY_ENDPOINT_URL') {
+            // Recommended: POST reference to your server for Paystack verification
+            fetch(verifyUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reference: response.reference })
+            })
+            .then(r => r.json())
+            .then(data => {
+              if (data && data.status === 'success' && Array.isArray(data.files)) {
+                // server returned verified & files array (URLs)
+                triggerDownloads(data.files);
+                clearCart();
+                document.getElementById('payment-msg').textContent = 'Payment verified — downloads starting.';
+                setTimeout(()=> location.href = 'publications.html', 2500);
+              } else {
+                document.getElementById('payment-msg').textContent = 'Payment not verified by server.';
+                console.warn('Verification failed', data);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              document.getElementById('payment-msg').textContent = 'Verification error.';
+            });
+          } else {
+            // FALLBACK (INSECURE): directly trigger downloads using data from local cart
+            // This is only for testing. Replace with server verification in production.
+            document.getElementById('payment-msg').textContent = 'No verify endpoint configured — using client fallback (insecure).';
+            setTimeout(() => {
+              const files = cart.map(i => i.pdf).filter(Boolean);
+              if (files.length) triggerDownloads(files);
+              clearCart();
+              document.getElementById('payment-msg').textContent = 'Downloads started. Redirecting...';
+              setTimeout(()=> location.href = 'publications.html', 2200);
+            }, 800);
+          }
+        }
+      });
+      handler.openIframe();
+    });
+
+    // Creates and clicks anchors to begin downloads
+    function triggerDownloads(urls) {
+      urls.forEach(url => {
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } catch (e) { console.error('download error', e); }
+      });
+    }
+  </script>
 </body>
 </html>

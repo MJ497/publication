@@ -174,9 +174,15 @@
                     <p class="text-gray-600 mb-2 text-sm">A gripping tale of history and redemption</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal1" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
-                        <button class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs" data-title="Marriage is honorable" aria-label="Add to Cart">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
+                         <button
+  class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs"
+  data-id="marriage-honorable"
+  data-title="Marriage is honorable"
+  data-price="3000.00"                          
+  data-pdf="https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF"
+  aria-label="Add to Cart">
+  <i class="fas fa-shopping-cart"></i>
+</button>
                     </div>
                 </div>
             </div>
@@ -222,7 +228,7 @@
                 </div>
                 <div class="md:w-2/3">
                     <h2 class="text-3xl font-bold mb-4">Marriage is honorable</h2>
-                    <p class="text-xl text-gray-600 mb-4">$14.99</p>
+                    <p class="text-xl text-gray-600 mb-4">N3000</p>
                     <p class="mb-6">It is a crystal clear truth that, one of the most challenged institution in this 21st century is marriage. 
 
 The statistics of cases of divorce is alarming. A lot of couples are separated and this have subjected the children to an ineffective upbringing.
@@ -239,7 +245,17 @@ in Hebrew 13:4, Marriage is honourable in all and the bed Undefiled
 You can grab your Copy of the Book  "Marriage is Honourable" Now and be Blessed by the Content in it. 
 
 Stay Blessed.</p>
-                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+                    <button
+  class="add-to-cart flex items-center justify-center px-3 py-3 rounded text-white text-xs"
+  style="background-color: #D2B48C;"
+  data-action="buy-now"                        
+  data-id="marriage-honorable"
+  data-title="Marriage is honorable"
+  data-price="3000.00"
+  data-pdf="https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF"
+  aria-label="Buy now">
+  <i class="fas fa-shopping-cart"></i> Purchase
+</button>
                 </div>
             </div>
         </div>
@@ -387,7 +403,7 @@ Stay Blessed.</p>
         });
 
         // cart sample handler (keep behavior)
-        if (cartBtn) cartBtn.addEventListener('click', () => alert('Cart functionality coming soon!'));
+        
       });
     </script>
 </body>
