@@ -14,6 +14,9 @@
     .btn-primary { background-color:#D2B48C; color:#fff; padding:10px 14px; border-radius:8px; display:inline-block; text-decoration:none; }
     .muted { color:#666; }
     .card { background:#f8fafb; border-radius:10px; padding:18px; }
+    /* small toast container style */
+    #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+    .toast { pointer-events:auto; background:rgba(0,0,0,0.85); color:white; padding:8px 12px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.25); }
   </style>
 </head>
 <body class="bg-white text-black">
@@ -89,13 +92,35 @@
     </div>
   </footer>
 
+  <div id="toast-container" aria-hidden="true"></div>
+
   <script src="https://js.paystack.co/v1/inline.js"></script>
   <script>
     feather.replace();
 
     const CART_KEY = 'olasunkanmi_cart_v1';
     function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e){ return []; } }
-    function clearCart(){ localStorage.removeItem(CART_KEY); }
+    function clearCart(){ localStorage.removeItem(CART_KEY); updateUIAfterClear(); }
+
+    function updateUIAfterClear(){
+      // simple UI updates after cart cleared
+      document.getElementById('order-items').innerHTML = '<div class="py-6 text-center muted">Your cart is empty — <a href="publications.html">Go back</a></div>';
+      document.getElementById('subtotal').textContent = '₦0.00';
+      document.getElementById('tax').textContent = '₦0.00';
+      document.getElementById('total').textContent = '₦0.00';
+      document.getElementById('pay-btn').disabled = true;
+    }
+
+    // small toast helper
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      container.appendChild(t);
+      setTimeout(()=> { t.style.transition = 'opacity 220ms'; t.style.opacity = '0'; }, 1400);
+      setTimeout(()=> t.remove(), 1700);
+    }
 
     // Render order items from localStorage
     function renderOrder() {
@@ -148,7 +173,7 @@
 
     renderOrder();
 
-    // PAYSTACK FLOW
+    // PAYSTACK FLOW (simplified: public key in client)
     document.getElementById('pay-btn').addEventListener('click', function() {
       const cart = readCart();
       if (!cart.length) return alert('Cart is empty');
@@ -160,7 +185,7 @@
       const total = cart.reduce((s,i) => s + (parseFloat(i.price||0) * (i.qty||1)), 0);
       const amountKobo = Math.round(total * 100); // Naira -> kobo (Paystack expects smallest unit)
 
-      // NOTE: replace with your Paystack public key
+      // NOTE: replace with your Paystack public key (pk_test_... or pk_live_...)
       const PAYSTACK_KEY = 'pk_test_cd5536a98573d218606597cfcb75a963cff8f1a4';
 
       const handler = PaystackPop.setup({
@@ -169,54 +194,69 @@
         amount: amountKobo,
         ref: 'order_' + Date.now(),
         metadata: {
+          // Paystack stores custom_fields as an array - we include cart stringified
           custom_fields: [
             {display_name: "Cart", variable_name: "cart", value: JSON.stringify(cart)}
           ]
         },
         onClose: function() {
           document.getElementById('payment-msg').textContent = 'Payment window closed.';
+          showToast('Payment closed');
         },
         callback: function(response) {
           // response.reference is the value to verify on server
           document.getElementById('payment-msg').textContent = 'Payment completed — verifying...';
-          const verifyUrl = 'https://publication-ten.vercel.app/api/verify-paystack';
+          showToast('Payment completed — verifying');
+          const verifyUrl = 'https://publication-ten.vercel.app/api/verify-paystack'; // <- your vercel endpoint
 
-          if (verifyUrl && verifyUrl !== 'VERIFY_ENDPOINT_URL') {
-            // Recommended: POST reference to your server for Paystack verification
-            fetch(verifyUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ reference: response.reference })
-            })
-            .then(r => r.json())
-            .then(data => {
-              if (data && data.status === 'success' && Array.isArray(data.files)) {
-                // server returned verified & files array (URLs)
-                triggerDownloads(data.files);
-                clearCart();
-                document.getElementById('payment-msg').textContent = 'Payment verified — downloads starting.';
-                setTimeout(()=> location.href = 'publications.html', 2500);
+          // read cart again to send as fallback (client-side)
+          const fallbackCart = readCart();
+
+          console.log('Paystack callback reference:', response.reference, 'cart:', fallbackCart);
+
+          fetch(verifyUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reference: response.reference, cart: fallbackCart })
+          })
+          .then(async r => {
+            const json = await r.json().catch(()=>null);
+            console.log('verify http status', r.status, 'body:', json);
+            if (!r.ok) {
+              document.getElementById('payment-msg').textContent = 'Verification failed (server error).';
+              showToast('Verification failed');
+              console.warn('verify failed http', r.status, json);
+              return null;
+            }
+            return json;
+          })
+          .then(data => {
+            if (!data) return;
+            console.log('verify response data:', data);
+            if (data.status === 'success' && Array.isArray(data.files) && data.files.length) {
+              showToast('Payment verified — starting downloads');
+              triggerDownloads(data.files);
+              clearCart();
+              document.getElementById('payment-msg').textContent = 'Payment verified — downloads starting.';
+              setTimeout(()=> location.href = 'publications.html', 2500);
+            } else {
+              // helpful debug UI for common reasons
+              if (data && data.reason === 'amount_mismatch') {
+                document.getElementById('payment-msg').textContent = 'Verification failed: amount mismatch. Check server logs.';
+                console.warn('amount mismatch details:', data.details || data);
+                showToast('Verification failed: amount mismatch');
               } else {
                 document.getElementById('payment-msg').textContent = 'Payment not verified by server.';
+                showToast('Verification failed');
                 console.warn('Verification failed', data);
               }
-            })
-            .catch(err => {
-              console.error(err);
-              document.getElementById('payment-msg').textContent = 'Verification error.';
-            });
-          } else {
-            // FALLBACK (INSECURE): directly trigger downloads using data from local cart
-            // This is only for testing. Replace with server verification in production.
-            document.getElementById('payment-msg').textContent = 'No verify endpoint configured — using client fallback (insecure).';
-            setTimeout(() => {
-              const files = cart.map(i => i.pdf).filter(Boolean);
-              if (files.length) triggerDownloads(files);
-              clearCart();
-              document.getElementById('payment-msg').textContent = 'Downloads started. Redirecting...';
-              setTimeout(()=> location.href = 'publications.html', 2200);
-            }, 800);
-          }
+            }
+          })
+          .catch(err => {
+            console.error('verify error', err);
+            document.getElementById('payment-msg').textContent = 'Verification error.';
+            showToast('Verification error');
+          });
         }
       });
       handler.openIframe();
@@ -226,6 +266,7 @@
     function triggerDownloads(urls) {
       urls.forEach(url => {
         try {
+          // open in new tab; for same-origin direct-download you can also set download attribute
           const a = document.createElement('a');
           a.href = url;
           a.target = '_blank';
@@ -233,7 +274,9 @@
           document.body.appendChild(a);
           a.click();
           a.remove();
-        } catch (e) { console.error('download error', e); }
+        } catch (e) {
+          console.error('download error', e);
+        }
       });
     }
   </script>
