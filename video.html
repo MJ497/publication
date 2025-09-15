@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Videos | Olasunkanmi Salami</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body { font-family: 'Montserrat', sans-serif; }
+    .btn-primary { background-color: #D2B48C; transition: all 0.25s ease; }
+    .btn-primary:hover { background-color: #B8860B; }
+    .header-link { position: relative; }
+    .header-link:after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: #D2B48C; transition: width 0.25s ease; }
+    .header-link:hover:after { width: 100%; }
+    .video-card { border-radius: 0.5rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: white; }
+    .video-thumb { background-position: center; background-size: cover; height: 0; padding-bottom: 56.25%; position: relative; }
+    .play-btn { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.55); color: white; width: 64px; height: 64px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .video-title { color: #111827; font-weight: 600; }
+    .meta { color: #6B7280; font-size: 0.95rem; }
+  </style>
+</head>
+<body class="bg-white text-black">
+ <section class="relative min-h-[550px] flex items-center bg-cover bg-center flex-col" style="background-image: url('author.jpg'); background-position-y: 20%;">
+        <div class="absolute inset-0 bg-black bg-opacity-60 section-hero-overlay"></div>
+        <nav class="relative z-20 py-6 px-4 md:px-12 lg:px-24 flex items-center justify-between w-full">
+          <div class="flex-1 flex items-center font-bold text-white text-lg md:text-2xl">
+            <img src="plogo.png" alt="Logo" class="h-12 w-12 mr-3 object-contain" />
+            Olasunkanmi Salami's Publication
+          </div>
+          <div id="mobile-navigation" class="mobile-nav hidden absolute top-full left-0 w-full bg-gray-800/95 shadow-lg flex-col space-y-4 py-6 px-4 z-50 md:static md:flex md:flex-row md:space-y-0 md:space-x-8 md:bg-transparent md:shadow-none md:py-0 md:px-0 md:w-auto md:relative md:justify-end">
+            <a href="index.html" class="header-link block md:inline text-white">Home</a>
+            <a href="publications.html" class="header-link block md:inline text-white">Publications</a>
+            <a href="biography.html" class="header-link   block md:inline text-white">Biography</a>
+         <a href="video.html" class="header-link font-bold block md:inline text-white">Videos</a>
+         
+        </div>
+          <div class="flex items-center space-x-4 md:space-x-6">
+            <button id="cart-btn" class="relative text-white text-2xl focus:outline-none" aria-label="Cart">
+              <i class="fas fa-shopping-cart"></i>
+              <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full px-1.5 py-0.5">0</span>
+            </button>
+            <button id="hamburger" class="md:hidden focus:outline-none" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-navigation">
+              <i class="fas fa-bars text-2xl cursor-pointer text-white" aria-hidden="true"></i>
+            </button>
+          </div>
+        </nav>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full w-full max-w-3xl px-4 md:px-12 lg:px-24" style="min-height: 180px; padding-bottom: 30px; margin-top: 10%;">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 text-white fade-in">Videos</h1>
+        <p class="text-white">A curated feed of the publisher's YouTube videos.</p>
+        </div>
+    </section>
+
+  <main class="max-w-6xl mx-auto px-4 md:px-12 lg:px-24 py-10">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold"></h1>
+       
+      </div>
+      <div class="flex items-center space-x-3">
+        <input id="search" placeholder="Search videos" class="px-4 py-2 border border-gray-200 rounded-md focus:outline-none" />
+        <button id="clear" class="px-3 py-2 border rounded text-gray-700">Clear</button>
+      </div>
+    </div>
+
+    <section id="feed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- JS populates cards -->
+    </section>
+
+    <div class="mt-8 text-center">
+      <button id="loadMore" class="btn-primary px-6 py-3 rounded text-white">Load more</button>
+    </div>
+  </main>
+
+  <footer class="py-12 px-4 md:px-12 lg:px-24 bg-black text-white mt-12">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <div class="mb-6 md:mb-0">
+        <div class="text-2xl font-bold mb-4">Olasunkanmi Salami's Publication</div>
+        <p>© 2025 All Rights Reserved</p>
+      </div>
+      <div class="flex space-x-6">
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function extractYoutubeID(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+        if (u.searchParams.get('v')) return u.searchParams.get('v');
+        const parts = u.pathname.split('/');
+        return parts.pop() || parts.pop();
+      } catch (e) { return null; }
+    }
+
+    function makeCard(video) {
+      const id = extractYoutubeID(video.url);
+      const card = document.createElement('article');
+      card.className = 'video-card bg-white rounded-lg overflow-hidden';
+
+      const thumb = document.createElement('div');
+      thumb.className = 'video-thumb';
+      thumb.style.backgroundImage = `url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`;
+
+      const play = document.createElement('button');
+      play.className = 'play-btn';
+      play.innerHTML = '<i class="fas fa-play"></i>';
+      play.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.src = `https://www.youtube.com/embed/${id}?rel=0&autoplay=1`;
+        iframe.style.position = 'absolute';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.left = 0;
+        iframe.style.top = 0;
+        thumb.innerHTML = '';
+        thumb.appendChild(iframe);
+      });
+
+      thumb.appendChild(play);
+      card.appendChild(thumb);
+
+      const body = document.createElement('div');
+      body.className = 'p-4';
+      const h3 = document.createElement('h3');
+      h3.className = 'video-title text-lg mb-1';
+      const a = document.createElement('a');
+      a.href = video.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = video.title || 'Untitled video';
+      h3.appendChild(a);
+
+      const meta = document.createElement('div');
+      meta.className = 'meta text-sm';
+      meta.textContent = video.author || 'Publisher';
+
+      body.appendChild(h3);
+      body.appendChild(meta);
+      card.appendChild(body);
+
+      return card;
+    }
+
+    const VIDEOS = [
+      { url: 'https://www.youtube.com/watch?v=ykUu7prXxgo', title: 'When you are not permitted to be alone', author: 'Olasunkanmi Salami' },
+      { url: 'https://www.youtube.com/watch?v=LTLYJ5BSrGE', title: 'The power of Recommendation', author: 'Olasunkanmi Salami' },
+      { url: 'https://www.youtube.com/watch?v=9PYIu_v7_dQ', title: 'The power of vision', author: 'Olasunkanmi Salami' }
+      , { url: 'https://www.youtube.com/watch?v=WNS2KDZGWRc', title: 'Building Capacity', author: 'Olasunkanmi Salami' }
+         , { url: 'https://www.youtube.com/watch?v=WtAbTgSvDec', title: 'Building a blissful home', author: 'Olasunkanmi Salami' }
+    ];
+
+    let page = 0; const PAGE = 6;
+
+    function render(filter = '') {
+      const container = document.getElementById('feed');
+      container.innerHTML = '';
+      const filtered = VIDEOS.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
+      const slice = filtered.slice(0, (page + 1) * PAGE);
+      slice.forEach(v => container.appendChild(makeCard(v)));
+      document.getElementById('loadMore').style.display = filtered.length > (page + 1) * PAGE ? 'inline-block' : 'none';
+    }
+
+    document.getElementById('loadMore').addEventListener('click', () => { page++; render(document.getElementById('search').value); window.scrollTo({ top: document.getElementById('feed').offsetTop - 80, behavior: 'smooth' }); });
+    document.getElementById('search').addEventListener('input', (e) => { page = 0; render(e.target.value); });
+    document.getElementById('clear').addEventListener('click', () => { document.getElementById('search').value = ''; page = 0; render(); });
+
+    render();
+  </script>
+</body>
+</html>
