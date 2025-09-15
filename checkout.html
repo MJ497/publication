@@ -179,7 +179,7 @@
         callback: function(response) {
           // response.reference is the value to verify on server
           document.getElementById('payment-msg').textContent = 'Payment completed — verifying...';
-          const verifyUrl = 'https://publication-ten.vercel.app//api/verify-paystack';
+          const verifyUrl = 'https://publication-ten.vercel.app/api/verify-paystack';
 
           if (verifyUrl && verifyUrl !== 'VERIFY_ENDPOINT_URL') {
             // Recommended: POST reference to your server for Paystack verification
