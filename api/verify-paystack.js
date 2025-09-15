@@ -1,132 +1,130 @@
 // api/verify-paystack.js
-// Vercel serverless function to verify Paystack transaction and return file URLs.
-//
-// Deploy: push to Vercel (or use vercel CLI). Set PAYSTACK_SECRET in Vercel dashboard.
-// Note: Replace the itemFiles mapping with your real file URLs (Google Drive uc links or signed URLs).
-
 export default async function handler(req, res) {
-  // Basic CORS handling (allow all origins — change for production)
+  // CORS - tighten later for production
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ status: 'failed', message: 'Method not allowed' });
 
   try {
-    const body = req.body && Object.keys(req.body).length ? req.body : JSON.parse(await bufferToString(req));
-    const { reference } = body || {};
+    // Parse body (works with Vercel / raw body fallback)
+    const body = req.body && Object.keys(req.body).length ? req.body : await bufferToJson(req);
+    const { reference, cart: fallbackCart } = body || {};
 
-    if (!reference) {
-      return res.status(400).json({ status: 'failed', message: 'Missing reference' });
-    }
+    if (!reference) return res.status(400).json({ status: 'failed', message: 'Missing reference in request' });
 
     const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET;
     if (!PAYSTACK_SECRET) {
-      console.error('Missing PAYSTACK_SECRET env var.');
+      console.error('PAYSTACK_SECRET not set in env');
       return res.status(500).json({ status: 'failed', message: 'Server not configured' });
     }
 
-    // call Paystack verify endpoint
+    // Verify with Paystack
     const verifyRes = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
-      headers: {
-        Authorization: `Bearer ${PAYSTACK_SECRET}`,
-        'Content-Type': 'application/json'
-      }
+      headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` }
     });
     const verifyJson = await verifyRes.json();
 
     if (!verifyJson || verifyJson.status !== true || !verifyJson.data) {
-      console.warn('Paystack verify returned unexpected:', verifyJson);
-      return res.status(400).json({ status: 'failed', message: 'Paystack verification failed', detail: verifyJson });
+      console.error('Paystack verify bad response', verifyJson);
+      return res.status(400).json({ status: 'failed', message: 'Paystack verification returned non-success', detail: verifyJson });
     }
 
     const tx = verifyJson.data;
-
-    // ensure the transaction succeeded
     if (tx.status !== 'success') {
+      console.warn('Transaction status not success', tx.status);
       return res.status(400).json({ status: 'failed', message: 'Transaction not successful', txStatus: tx.status });
     }
 
-    // Parse cart from metadata (we expect client to send cart in metadata when opening Paystack)
+    // Extract cart from metadata robustly
     let cart = [];
     try {
-      if (tx.metadata && tx.metadata.cart) {
-        cart = Array.isArray(tx.metadata.cart) ? tx.metadata.cart : JSON.parse(tx.metadata.cart);
+      if (tx.metadata) {
+        // 1) If metadata.cart exists (stringified or array)
+        if (tx.metadata.cart) {
+          cart = Array.isArray(tx.metadata.cart) ? tx.metadata.cart : JSON.parse(tx.metadata.cart || '[]');
+        } else if (Array.isArray(tx.metadata.custom_fields)) {
+          // 2) If metadata.custom_fields is present (Paystack inline sets custom_fields)
+          const cf = tx.metadata.custom_fields.find(f =>
+            (f.variable_name && String(f.variable_name).toLowerCase() === 'cart')
+            || (f.display_name && String(f.display_name).toLowerCase().includes('cart'))
+          );
+          if (cf && cf.value) {
+            cart = Array.isArray(cf.value) ? cf.value : JSON.parse(cf.value || '[]');
+          }
+        }
       }
     } catch (err) {
-      console.warn('Error parsing metadata.cart', err);
+      console.warn('Error parsing metadata cart/custom_fields', err);
       cart = [];
     }
 
-    // Validate amount: Paystack returns amount in kobo (Naira * 100)
-    // Compute expected amount from cart (use price * qty)
+    let usedFallback = false;
+    // If metadata didn't contain cart, use fallback cart supplied in POST (debug only)
+    if ((!cart || cart.length === 0) && Array.isArray(fallbackCart) && fallbackCart.length) {
+      usedFallback = true;
+      cart = fallbackCart;
+      console.warn('Using fallback cart from POST body (less secure).');
+    }
+
+    // Compute expected amount (kobo)
     const computedKobo = Math.round((cart || []).reduce((s, it) => {
       const p = parseFloat(it.price || 0) || 0;
       const q = parseInt(it.qty || 1, 10) || 1;
       return s + (p * q * 100);
     }, 0));
 
-    // tx.amount is number in kobo
+    // Compare with Paystack's amount (tx.amount is in kobo)
     if (Number(tx.amount) !== computedKobo) {
-      console.warn('Amount mismatch', { txAmount: tx.amount, computedKobo });
-      return res.status(400).json({ status: 'failed', reason: 'amount_mismatch', expected: computedKobo, received: tx.amount });
+      console.warn('Amount mismatch', { txAmount: tx.amount, computedKobo, usedFallback, cart });
+      return res.status(400).json({
+        status: 'failed',
+        reason: 'amount_mismatch',
+        message: 'Amount paid does not match expected amount from cart',
+        details: { txAmount: tx.amount, expected: computedKobo, usedFallback, cart }
+      });
     }
 
-    // Map purchased item ids to file URLs.
-    // Replace the below mapping values with your actual hosted file URLs (Google Drive uc?export=download&id=...)
+    // Map item ids to file urls — replace with your real file URLs
     const itemFiles = {
       'marriage-honorable': [
-        "https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF",
-        // optionally return multiple formats e.g. epub/mobi:
-        // 'https://drive.google.com/uc?export=download&id=FILE_ID_EPUB',
+        'https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF'
       ],
-    //   'becoming-balanced-man': [
-    //     'https://drive.google.com/uc?export=download&id=FILE_ID_PDF_2'
-    //   ],
-    //   'accepting-responsibilities': [
-    //     'https://drive.google.com/uc?export=download&id=FILE_ID_PDF_3'
-    //   ]
-      // add all your product id -> [fileUrls] mappings
+      // add other product id -> [fileUrl] entries here
     };
 
-    // Build files array based on cart items (dedupe)
+    // Build files list
     const files = [];
     (cart || []).forEach(it => {
-      const id = it.id || it.productId || it.sku;
+      const id = it.id || it.productId || it.sku || (it.title && String(it.title).replace(/\s+/g,'-').toLowerCase());
       if (!id) return;
       const mapped = itemFiles[id];
       if (mapped && Array.isArray(mapped)) {
-        mapped.forEach(url => {
-          if (!files.includes(url)) files.push(url);
-        });
+        mapped.forEach(url => { if (!files.includes(url)) files.push(url); });
       }
     });
 
-    // If nothing matched, optionally return a default file list or an error
+    // If no files matched, return empty list (or change to error if preferred)
     if (!files.length) {
       console.warn('No files mapped for cart items', cart);
-      // You can return 200 with empty files and handle on client; here we return 200 but with empty files
       return res.json({ status: 'success', files: [] });
     }
 
-    // OPTIONAL: you could generate short-lived signed URLs here instead of returning direct links.
-    // For now we return the mapped URLs (Google Drive uc links or direct storage links)
+    // Success — return file URLs
     return res.json({ status: 'success', files });
 
   } catch (err) {
     console.error('verify-paystack error', err);
-    return res.status(500).json({ status: 'failed', message: 'Server error' });
+    return res.status(500).json({ status: 'failed', message: 'Server error', error: err.message });
   }
 }
 
-// small helper to read raw body if req.body is empty (Vercel sometimes provides parsed body)
-async function bufferToString(req) {
+// Helper to parse raw request body if req.body missing
+async function bufferToJson(req) {
   const chunks = [];
   for await (const chunk of req) chunks.push(Buffer.from(chunk));
-  return Buffer.concat(chunks).toString('utf8');
+  const s = Buffer.concat(chunks).toString('utf8') || '{}';
+  try { return JSON.parse(s); } catch(e) { return {}; }
 }
