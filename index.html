@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="main.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -37,7 +38,7 @@
             width: 100%;
         }
 
-        /* ADDED: modal styles (minimal, non-invasive) */
+        /* modal base */
         .modal {
             display: none;
             position: fixed;
@@ -52,29 +53,58 @@
             padding: 20px;
         }
 
+        /* visible */
         .modal[aria-hidden="false"] {
             display: flex;
         }
 
+        /* scrollable modal content */
         .modal-content {
             background-color: white;
             margin: 0 auto;
-            padding: 30px;
+            padding: 24px;
             width: 100%;
-            max-width: 760px;
+            max-width: 900px; /* allow larger on desktop */
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            outline: 0;
+            /* KEY: make content scrollable while keeping modal centered */
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* smooth native scrolling on iOS */
+        }
+
+        /* content layout helpers */
+        .modal-grid {
+            display: flex;
+            gap: 24px;
+            flex-direction: column;
+        }
+        @media (min-width: 768px) {
+            .modal-grid {
+                flex-direction: row;
+            }
+        }
+
+        .modal-left {
+            flex: 0 0 36%;
+        }
+        .modal-right {
+            flex: 1 1 64%;
         }
 
         /* close button small styling */
+        .modal .close-btn,
         .modal .float-right {
             font-size: 1.25rem;
             line-height: 1;
             cursor: pointer;
+            user-select: none;
         }
 
+        /* small responsive tweaks */
         @media (min-width: 768px) {
-            .modal-content { max-width: 700px; }
+            .modal-content { max-width: 760px; padding: 30px; }
         }
 
         /* ADDED: fade-in/out transitions */
@@ -88,36 +118,41 @@
             transform: translateY(0);
         }
 
-        /* ====== MOBILE NAV / OVERLAY FIXES ====== */
-        /* allow clicks through hero overlay unless explicitly enabled */
+        /* Mobile nav fixes */
         .section-hero-overlay {
-          pointer-events: none; /* default: let touches pass to nav/menu */
+          pointer-events: none;
         }
 
-        /* mobile nav visible state helper */
         .mobile-nav-open {
           display: flex !important;
           pointer-events: auto;
           z-index: 99999 !important;
         }
-
-        /* ensure mobile links are tappable */
         .mobile-nav a,
         .mobile-nav button {
           pointer-events: auto;
         }
-
-        /* ensure the mobile nav sits above everything */
         .mobile-nav {
           z-index: 99999;
         }
-        /* ========================================== */
+        /* small cosmetic for modal images */
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            display:block;
+            border-radius: 6px;
+        }
+
+        /* ensure keyboard focus visible */
+        .modal-content :focus {
+            outline: 3px solid rgba(210,180,140,0.35);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body class="bg-white text-black text-base md:text-[15px] lg:text-[16px]">
     <!-- Hero Section with Navbar -->
     <section class="relative min-h-screen flex items-center bg-cover bg-center flex-col" style="background-image: url('author.jpg');background-position-y: 20%;  min-height: 100vh;">
-        <!-- overlay: class added so we can control pointer-events from CSS/JS -->
         <div class="absolute inset-0 bg-black bg-opacity-60 section-hero-overlay"></div>
 
         <nav class="relative z-20 py-6 px-4 md:px-12 lg:px-24 flex items-center justify-between w-full">
@@ -143,7 +178,7 @@
         </nav>
 
         <div class="relative z-10 flex flex-col items-start justify-end h-full w-full max-w-5xl px-4 md:px-12 lg:px-24" style="min-height: 80vh; padding-bottom: 30px;">
-            <h1 class="text-3xl md:text-5xl font-bold mb-4 text-white fade-in">Welcome to my treasury of spiritual wisdom</h1>
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 text-white fade-in">Welcome to my treasury of spiritual wisdom</h1>
             <p class="text-base md:text-lg mb-8 max-w-xl text-white fade-in">Discover captivating, soul-lifting, and life-transforming publications for your mental, emotional, and spiritual edification.</p>
             <div class="flex space-x-4 fade-in">
                 <a href="publications.html" class="btn-primary px-6 py-2 rounded text-white font-medium text-sm">Browse Books</a>
@@ -171,7 +206,7 @@
                 <img src="book1.jpg" alt="Book Cover" class="w-full h-48 object-cover">
                 <div class="p-4 flex flex-col h-full justify-between">
                     <h3 class="text-lg font-bold mb-1">Marriage is honorable</h3>
-                    <p class="text-gray-600 mb-2 text-sm">A gripping tale of history and redemption</p>
+                    <p class="text-gray-600 mb-2 text-sm">One of the most challenged institution in this 21st century is marriage.</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal1" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
                          <button
@@ -191,7 +226,7 @@
                 <img src="book2.jpg" alt="Book Cover" class="w-full h-48 object-cover">
                 <div class="p-4 flex flex-col h-full justify-between">
                     <h3 class="text-lg font-bold mb-1">Becoming a Balanced Man</h3>
-                    <p class="text-gray-600 mb-2 text-sm">A psychological thriller that keeps you guessing</p>
+                    <p class="text-gray-600 mb-2 text-sm"> Man is a tripartite being - a spirit being  that possess a soul and dwelling in a body. .</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal2" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
                         <button class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs" data-title="Becoming a Balanced Man" aria-label="Add to Cart">
@@ -205,7 +240,7 @@
                 <img src="book3.jpg" alt="Book Cover" class="w-full h-48 object-cover">
                 <div class="p-4 flex flex-col h-full justify-between">
                     <h3 class="text-lg font-bold mb-1">Accepting responsibilities</h3>
-                    <p class="text-gray-600 mb-2 text-sm">An epic journey across time and space</p>
+                    <p class="text-gray-600 mb-2 text-sm">everyone is absolutely responsible for the outcome of their lives.</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal3" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
                         <button class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs" data-title="Accepting responsibilities" aria-label="Add to Cart">
@@ -217,85 +252,78 @@
         </div>
     </section>
 
-    <!-- Book Modals -->
-    <!-- Modal 1 -->
-    <div id="modal1" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <span class="float-right cursor-pointer" role="button" tabindex="0">&times;</span>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/3">
-                    <img src="book1.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
-                </div>
-                <div class="md:w-2/3">
-                    <h2 class="text-3xl font-bold mb-4">Marriage is honorable</h2>
-                    <p class="text-xl text-gray-600 mb-4">N3000</p>
-                    <p class="mb-6">It is a crystal clear truth that, one of the most challenged institution in this 21st century is marriage. 
-
-The statistics of cases of divorce is alarming. A lot of couples are separated and this have subjected the children to an ineffective upbringing.
-
- Moreso, the issue of cheating in marriage is another bone of contention in this dispensation. But the good news is that ,in spite of all these unpleasant events,
-this in any way do not invalidate the honour in Marriage. 
-
-Marriage is honourable. Marriage is not merely a human arrangement or cultural
-tradition. It is a divine institution, ordained by God as rooted in His eternal purpose for humanity. 
-
-The scripture clearly declares
-in Hebrew 13:4, Marriage is honourable in all and the bed Undefiled
-
-You can grab your Copy of the Book  "Marriage is Honourable" Now and be Blessed by the Content in it. 
-
-Stay Blessed.</p>
-                    <button
-  class="add-to-cart flex items-center justify-center px-3 py-3 rounded text-white text-xs"
-  style="background-color: #D2B48C;"
-  data-action="buy-now"                        
-  data-id="marriage-honorable"
-  data-title="Marriage is honorable"
-  data-price="3000.00"
-  data-pdf="https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF"
-  aria-label="Buy now">
-  <i class="fas fa-shopping-cart"></i> Purchase
-</button>
-                </div>
-            </div>
+    <!-- Modals (Scrollable) -->
+  <div id="modal1" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal1-title">
+    <div class="modal-content" role="document">
+      <button class="close-btn float-right" aria-label="Close modal" data-dismiss>&times;</button>
+      <div class="modal-grid">
+        <div class="modal-left">
+          <img src="book1.jpg" alt="Marriage is honorable" />
         </div>
-    </div>
+        <div class="modal-right">
+          <h2 id="modal1-title" class="text-3xl font-bold mb-4">Marriage is honorable</h2>
+          <p class="text-xl text-gray-600 mb-4">N3,000</p>
+          <div>
+            <p class="mb-6">It is a crystal clear truth that, one of the most challenged institution in this 21st century is marriage.
+            The statistics of cases of divorce is alarming. A lot of couples are separated and this have subjected the children to an ineffective upbringing.</p>
 
-    <!-- Modal 2 -->
-    <div id="modal2" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <span class="float-right cursor-pointer" role="button" tabindex="0">&times;</span>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/3">
-                    <img src="book2.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
-                </div>
-                <div class="md:w-2/3">
-                    <h2 class="text-3xl font-bold mb-4"> Becoming a Balanced Man</h2>
-                    <p class="text-xl text-gray-600 mb-4">$12.99</p>
-                    <p class="mb-6">A psychological thriller that will keep you guessing until the very last page. When a renowned psychiatrist takes on a mysterious patient, he finds himself drawn into a web of deception that challenges his professional judgment and personal sanity.</p>
-                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
-                </div>
-            </div>
-        </div>
-    </div>
+            <p class="mb-6">Moreso, the issue of cheating in marriage is another bone of contention in this dispensation. But the good news is that, in spite of all these unpleasant events, this in any way do not invalidate the honour in Marriage.</p>
 
-    <!-- Modal 3 -->
-    <div id="modal3" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <span class="float-right cursor-pointer" role="button" tabindex="0">&times;</span>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/3">
-                    <img src="book3.jpg" alt="Book Cover" class="w-full h-64 object-cover rounded">
-                </div>
-                <div class="md:w-2/3">
-                    <h2 class="text-3xl font-bold mb-4">Accepting responsibilities</h2>
-                    <p class="text-xl text-gray-600 mb-4">$16.99</p>
-                    <p class="mb-6">An epic science fiction adventure that spans galaxies and centuries. As humanity faces its greatest existential threat, a diverse crew of explorers embarks on a desperate mission to find a new home among the stars, encountering wonders and dangers beyond imagination.</p>
-                    <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
-                </div>
-            </div>
+            <p class="mb-6">Marriage is honourable. Marriage is not merely a human arrangement or cultural tradition. It is a divine institution, ordained by God as rooted in His eternal purpose for humanity.</p>
+
+            <p class="mb-6">You can grab your Copy of the Book "Marriage is Honourable" Now and be Blessed by the Content in it. Stay Blessed.</p>
+          </div>
+
+          <div class="mt-4">
+            <button
+              class="add-to-cart inline-flex items-center justify-center px-4 py-2 rounded text-white text-sm"
+              style="background-color: #D2B48C;"
+              data-action="buy-now"
+              data-id="marriage-honorable"
+              data-title="Marriage is honorable"
+              data-price="3000.00"
+              aria-label="Buy now">
+              <i class="fas fa-shopping-cart mr-2"></i> Purchase
+            </button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+
+  <div id="modal2" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal2-title">
+    <div class="modal-content" role="document">
+      <button class="close-btn float-right" aria-label="Close modal" data-dismiss>&times;</button>
+      <div class="modal-grid">
+        <div class="modal-left">
+          <img src="book2.jpg" alt="Becoming a Balanced Man" />
+        </div>
+        <div class="modal-right">
+          <h2 id="modal2-title" class="text-3xl font-bold mb-4">Becoming a Balanced Man</h2>
+          <p class="text-xl text-gray-600 mb-4">N3,000</p>
+          <p class="mb-6">Man is a tripartite being - a spirit being that possess a soul and dwelling in a body. These three though separate, yet dependent, have to be in harmony in order to live a fruitful and fulfilled life in accordance with God's design, plan and purpose.</p>
+          <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal3" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal3-title">
+    <div class="modal-content" role="document">
+      <button class="close-btn float-right" aria-label="Close modal" data-dismiss>&times;</button>
+      <div class="modal-grid">
+        <div class="modal-left">
+          <img src="book3.jpg" alt="Accepting responsibilities" />
+        </div>
+        <div class="modal-right">
+          <h2 id="modal3-title" class="text-3xl font-bold mb-4">Accepting responsibilities</h2>
+          <p class="text-xl text-gray-600 mb-4">N3,000</p>
+          <p class="mb-6">Accepting Responsibility richly brings to you a need to understand how the devil operates and how best to live above his device and caprices in life generally and in the home especially.</p>
+          <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- Footer -->
     <footer class="py-12 px-4 md:px-12 lg:px-24 bg-black text-white">
@@ -313,98 +341,127 @@ Stay Blessed.</p>
         </div>
     </footer>
 
-    <!-- your external main.js (you said you already updated this) -->
-    <script src="main.js"></script>
-
-    <!-- small safety: ensure overlay pointer-events remains none on load (non-invasive) -->
+    <!-- small script: modal controller + mobile nav handling -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const overlay = document.querySelector('.section-hero-overlay');
         if (overlay) overlay.style.pointerEvents = 'none';
-      });
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
+
+        // Mobile nav
         const hamburgerBtn = document.getElementById('hamburger');
         const mobileNav = document.getElementById('mobile-navigation');
-        const overlay = document.querySelector('.section-hero-overlay');
-        const cartBtn = document.getElementById('cart-btn');
+        if (hamburgerBtn && mobileNav) {
+          hamburgerBtn.setAttribute('aria-expanded','false');
+          function openMobileNav() {
+            mobileNav.classList.remove('hidden');
+            mobileNav.classList.add('mobile-open');
+            hamburgerBtn.setAttribute('aria-expanded','true');
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+            if (overlay) overlay.style.pointerEvents = 'none';
+          }
+          function closeMobileNav() {
+            mobileNav.classList.add('hidden');
+            mobileNav.classList.remove('mobile-open');
+            hamburgerBtn.setAttribute('aria-expanded','false');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            if (overlay) overlay.style.pointerEvents = 'none';
+          }
+          hamburgerBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (mobileNav.classList.contains('hidden')) openMobileNav();
+            else closeMobileNav();
+          });
+          document.addEventListener('click', function (e) {
+            const target = e.target;
+            if (!mobileNav.classList.contains('hidden') && !mobileNav.contains(target) && !hamburgerBtn.contains(target)) {
+              closeMobileNav();
+            }
+          });
+          window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+              mobileNav.classList.remove('hidden', 'mobile-open');
+              hamburgerBtn.setAttribute('aria-expanded', 'false');
+              document.documentElement.style.overflow = '';
+              document.body.style.overflow = '';
+            } else {
+              if (!mobileNav.classList.contains('hidden')) mobileNav.classList.add('hidden');
+            }
+          });
+        }
 
-        if (!hamburgerBtn || !mobileNav) return;
+        // Modal controller
+        const modalTriggers = document.querySelectorAll('[data-modal]');
+        const modals = document.querySelectorAll('.modal');
 
-        // Accessibility
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-
-        function openMobileNav() {
-          mobileNav.classList.remove('hidden');
-          mobileNav.classList.add('mobile-open');
-          hamburgerBtn.setAttribute('aria-expanded', 'true');
-          // lock scroll behind menu
+        function openModal(modal) {
+          if (!modal) return;
+          modal.setAttribute('aria-hidden', 'false');
+          // focus the first focusable element inside modal
+          const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusable) focusable.focus();
+          // lock background scroll
           document.documentElement.style.overflow = 'hidden';
           document.body.style.overflow = 'hidden';
-          // overlay should not block the menu area
-          if (overlay) overlay.style.pointerEvents = 'none';
         }
 
-        function closeMobileNav() {
-          mobileNav.classList.add('hidden');
-          mobileNav.classList.remove('mobile-open');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
+        function closeModal(modal) {
+          if (!modal) return;
+          modal.setAttribute('aria-hidden', 'true');
           document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
-          if (overlay) overlay.style.pointerEvents = 'none';
         }
 
-        hamburgerBtn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          if (mobileNav.classList.contains('hidden')) openMobileNav();
-          else closeMobileNav();
-        });
-
-        hamburgerBtn.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' || e.key === ' ') {
+        modalTriggers.forEach(trigger => {
+          trigger.addEventListener('click', function (e) {
             e.preventDefault();
-            hamburgerBtn.click();
-          }
-        });
-
-        // close menu when clicking any link
-        mobileNav.querySelectorAll('a').forEach(a => {
-          a.addEventListener('click', function () {
-            // short delay to allow native navigation
-            setTimeout(closeMobileNav, 80);
+            const id = trigger.getAttribute('data-modal');
+            const modal = document.getElementById(id);
+            openModal(modal);
+          });
+          // keyboard accessible
+          trigger.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              trigger.click();
+            }
           });
         });
 
-        // close when tapping outside the mobile-nav panel (optional)
-        document.addEventListener('click', function (e) {
-          const target = e.target;
-          // if menu is open and click is outside nav and hamburger, close it
-          if (!mobileNav.classList.contains('hidden') && !mobileNav.contains(target) && !hamburgerBtn.contains(target)) {
-            closeMobileNav();
+        // close handlers for close buttons and any [data-dismiss]
+        document.querySelectorAll('[data-dismiss], .close-btn').forEach(btn => {
+          btn.addEventListener('click', function (e) {
+            // find closest modal parent
+            const modal = btn.closest('.modal');
+            if (modal) closeModal(modal);
+          });
+        });
+
+        // click outside modal-content to close
+        modals.forEach(modal => {
+          modal.addEventListener('click', function (e) {
+            const content = modal.querySelector('.modal-content');
+            if (!content) return;
+            if (!content.contains(e.target)) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        // close on Escape
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            modals.forEach(m => {
+              if (m.getAttribute('aria-hidden') === 'false') closeModal(m);
+            });
           }
         });
 
-        // keep overlay pointer-events none by default
-        if (overlay) overlay.style.pointerEvents = 'none';
-
-        // small fallback: hide mobile nav on resize >= md
-        window.addEventListener('resize', () => {
-          if (window.innerWidth >= 768) {
-            mobileNav.classList.remove('hidden', 'mobile-open');
-            mobileNav.classList.remove('mobile-open');
-            hamburgerBtn.setAttribute('aria-expanded', 'false');
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
-          } else {
-            // ensure hidden on smaller screens
-            if (!mobileNav.classList.contains('hidden')) mobileNav.classList.add('hidden');
-          }
-        });
-
-        // cart sample handler (keep behavior)
-        
+        // Optional: ensure modals start hidden
+        modals.forEach(m => m.setAttribute('aria-hidden','true'));
       });
     </script>
+
 </body>
 </html>
