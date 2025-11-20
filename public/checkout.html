@@ -189,78 +189,124 @@
       const amountKobo = Math.round(total * 100); // Naira -> kobo (Paystack expects smallest unit)
 
       // NOTE: replace with your Paystack public key (pk_test_... or pk_live_...)
-      const PAYSTACK_KEY = 'pk_test_c88830aff2824e91a56e32a87481780f828ba337';
+      const PAYSTACK_KEY = 'pk_live_8d564a23f14efeda0cc5bdf2840799ccad436423';
 
+      // Immediate client-side Paystack setup -> start downloads directly inside callback
       const handler = PaystackPop.setup({
         key: PAYSTACK_KEY,
         email,
         amount: amountKobo,
         ref: 'order_' + Date.now(),
         metadata: {
-          // Paystack stores custom_fields as an array - we include cart stringified
           custom_fields: [
-            {display_name: "Cart", variable_name: "cart", value: JSON.stringify(cart)}
+            { display_name: "Cart", variable_name: "cart", value: JSON.stringify(cart) }
           ]
         },
         onClose: function() {
           document.getElementById('payment-msg').textContent = 'Payment window closed.';
           showToast('Payment closed');
         },
-        callback: function(response) {
-          // response.reference is the value to verify on server
-          document.getElementById('payment-msg').textContent = 'Payment completed — verifying...';
-          showToast('Payment completed — verifying');
-          const verifyUrl = 'https://publication-ten.vercel.app/api/verify-paystack'; // <- your vercel endpoint
+    callback: function(response) {
+  // Get fresh cart
+  const fallbackCart = readCart();
+  document.getElementById('payment-msg').textContent = 'Payment completed — preparing downloads';
+  showToast('Payment completed — ready to download');
 
-          // read cart again to send as fallback (client-side)
-          const fallbackCart = readCart();
+  // Item -> files mapping (same as before)
+  const itemFiles = {
+    'marriage-honorable': [
+      'https://drive.google.com/uc?export=download&id=1TerxB66O3f1zk4FrWSMyUJ2zIArkMQoF'
+    ],
+    // add other mappings...
+  };
 
-          console.log('Paystack callback reference:', response.reference, 'cart:', fallbackCart);
+  // Build files list
+  const files = [];
+  (fallbackCart || []).forEach(it => {
+    const id = it.id || it.productId || it.sku || (it.title && String(it.title).replace(/\s+/g,'-').toLowerCase());
+    if (!id) return;
+    const mapped = itemFiles[id];
+    if (mapped && Array.isArray(mapped)) {
+      mapped.forEach(url => { if (!files.includes(url)) files.push(url); });
+    }
+  });
 
-          fetch(verifyUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reference: response.reference, cart: fallbackCart })
-          })
-          .then(async r => {
-            const json = await r.json().catch(()=>null);
-            console.log('verify http status', r.status, 'body:', json);
-            if (!r.ok) {
-              document.getElementById('payment-msg').textContent = 'Verification failed (server error).';
-              showToast('Verification failed');
-              console.warn('verify failed http', r.status, json);
-              return null;
-            }
-            return json;
-          })
-          .then(data => {
-            if (!data) return;
-            console.log('verify response data:', data);
-            if (data.status === 'success' && Array.isArray(data.files) && data.files.length) {
-              showToast('Payment verified — starting downloads');
-              triggerDownloads(data.files);
-              clearCart();
-              document.getElementById('payment-msg').textContent = 'Payment verified — downloads starting.';
-              setTimeout(()=> location.href = 'publications.html', 2500);
-            } else {
-              // helpful debug UI for common reasons
-              if (data && data.reason === 'amount_mismatch') {
-                document.getElementById('payment-msg').textContent = 'Verification failed: amount mismatch. Check server logs.';
-                console.warn('amount mismatch details:', data.details || data);
-                showToast('Verification failed: amount mismatch');
-              } else {
-                document.getElementById('payment-msg').textContent = 'Payment not verified by server.';
-                showToast('Verification failed');
-                console.warn('Verification failed', data);
-              }
-            }
-          })
-          .catch(err => {
-            console.error('verify error', err);
-            document.getElementById('payment-msg').textContent = 'Verification error.';
-            showToast('Verification error');
-          });
-        }
+  if (!files.length) {
+    document.getElementById('payment-msg').textContent = 'Payment completed but no files found for your cart items.';
+    showToast('No files found for your cart — contact support.');
+    console.warn('No files mapped for cart', fallbackCart);
+    return;
+  }
+
+  // Create a small download panel (in-page) so user can click to start downloads
+  let panel = document.getElementById('download-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'download-panel';
+    panel.style = 'position:fixed;left:50%;transform:translateX(-50%);bottom:28px;background:#fff;border-radius:8px;padding:12px;box-shadow:0 6px 24px rgba(0,0,0,0.15);z-index:10000;max-width:90vw;';
+    document.body.appendChild(panel);
+  }
+  panel.innerHTML = `
+    <div style="font-weight:600;margin-bottom:8px;">Your download is ready</div>
+    <div id="download-links" style="max-height:180px;overflow:auto;margin-bottom:8px;"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button id="start-downloads" style="background:#D2B48C;color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;">Start downloads</button>
+      <button id="close-downloads" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;">Later</button>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:#666;">If automatic downloads fail, click any link below to download manually.</div>
+  `;
+
+  // populate manual links
+  const linksEl = document.getElementById('download-links');
+  linksEl.innerHTML = '';
+  files.forEach((u, idx) => {
+    const link = document.createElement('a');
+    link.href = u;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = `Download file ${idx + 1}`;
+    link.style = 'display:block;padding:6px 0;color:#0645AD;text-decoration:underline;';
+    linksEl.appendChild(link);
+  });
+
+  // Start downloads when user clicks the button (this click is a user gesture)
+  document.getElementById('start-downloads').onclick = function() {
+    // Attempt to open each file in a new tab (works when triggered by user click)
+    files.forEach(url => {
+      try {
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        // For same-origin downloads you can set a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (e) {
+        console.error('download error', e);
+      }
+    });
+
+    // Clear cart, show status, close panel after a short pause
+    clearCart();
+    document.getElementById('payment-msg').textContent = 'Downloads started — thank you!';
+    showToast('Downloads started');
+
+    setTimeout(() => {
+      const p = document.getElementById('download-panel');
+      if (p) p.remove();
+      // optional redirect
+      // location.href = 'publications.html';
+    }, 1400);
+  };
+
+  document.getElementById('close-downloads').onclick = function() {
+    const p = document.getElementById('download-panel');
+    if (p) p.remove();
+    // keep cart cleared or not — your choice; we won't clear here
+  };
+}
+
       });
       handler.openIframe();
     });
@@ -282,6 +328,7 @@
         }
       });
     }
+    
   </script>
 </body>
 </html>
