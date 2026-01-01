@@ -225,28 +225,44 @@
             </div>
             <!-- Book 2 -->
             <div class="w-64 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex-shrink-0 fade-in-card flex flex-col justify-between">
-                <img src="book2.jpg" alt="Book Cover" class="w-full h-48 object-cover">
+                <img src="becoming.jpeg" alt="Book Cover" class="w-full h-48 object-cover">
                 <div class="p-4 flex flex-col h-full justify-between">
                     <h3 class="text-lg font-bold mb-1">Becoming a Balanced Man</h3>
+                    <p>
+                
                     <p class="text-gray-600 mb-2 text-sm"> Man is a tripartite being - a spirit being  that possess a soul and dwelling in a body. .</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal2" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
-                        <button class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs" data-title="Becoming a Balanced Man" aria-label="Add to Cart">
-                            <i class="fas fa-shopping-cart"></i>
+                        <!-- Added data-id, data-price and data-pdf so this button matches Book 1 behavior -->
+                        <button
+                          class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs"
+                          data-id="becoming-balanced-man"
+                          data-title="Becoming a Balanced Man"
+                          data-price="3000.00"
+                          data-pdf="https://drive.google.com/uc?export=download&id=17A5colQQo2rt1lLjoRQeaPwjXhKTXAR3"
+                          aria-label="Add to Cart">
+                          <i class="fas fa-shopping-cart"></i>
                         </button>
                     </div>
                 </div>
             </div>
             <!-- Book 3 -->
             <div class="w-64 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex-shrink-0 fade-in-card flex flex-col justify-between">
-                <img src="book3.jpg" alt="Book Cover" class="w-full h-48 object-cover">
+                <img src="accepting.jpeg" alt="Book Cover" class="w-full h-48 object-cover">
                 <div class="p-4 flex flex-col h-full justify-between">
                     <h3 class="text-lg font-bold mb-1">Accepting responsibilities</h3>
                     <p class="text-gray-600 mb-2 text-sm">everyone is absolutely responsible for the outcome of their lives.</p>
                     <div class="flex items-center justify-between mt-4">
                         <a href="#" data-modal="modal3" class="btn-primary px-3 py-1 rounded text-white font-medium text-xs">View Details</a>
-                        <button class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs" data-title="Accepting responsibilities" aria-label="Add to Cart">
-                            <i class="fas fa-shopping-cart"></i>
+                        <!-- Added data-id, data-price and data-pdf so this button matches Book 1 behavior -->
+                        <button
+                          class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs"
+                          data-id="accepting-responsibilities"
+                          data-title="Accepting responsibilities"
+                          data-price="2500.00"
+                          data-pdf="https://drive.google.com/uc?export=download&id=1EpGsDBWTc5FaL9p-UZPlARnrFnVhtU_C"
+                          aria-label="Add to Cart">
+                          <i class="fas fa-shopping-cart"></i>
                         </button>
                     </div>
                 </div>
@@ -298,13 +314,21 @@
       <button class="close-btn float-right" aria-label="Close modal" data-dismiss>&times;</button>
       <div class="modal-grid">
         <div class="modal-left">
-          <img src="book2.jpg" alt="Becoming a Balanced Man" />
+          <img src="becoming.jpeg" alt="Becoming a Balanced Man" />
         </div>
         <div class="modal-right">
           <h2 id="modal2-title" class="text-3xl font-bold mb-4">Becoming a Balanced Man</h2>
           <p class="text-xl text-gray-600 mb-4">N3,000</p>
           <p class="mb-6">Man is a tripartite being - a spirit being that possess a soul and dwelling in a body. These three though separate, yet dependent, have to be in harmony in order to live a fruitful and fulfilled life in accordance with God's design, plan and purpose.</p>
-          <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+         <button
+                          class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs"
+                          data-id="becoming-balanced-man"
+                           data-action="buy-now"
+                          data-title="Becoming a Balanced Man"
+                          data-price="3000.00"
+                          aria-label="Buy now">
+                          <i class="fas fa-shopping-cart"></i>
+                        </button>
         </div>
       </div>
     </div>
@@ -315,13 +339,21 @@
       <button class="close-btn float-right" aria-label="Close modal" data-dismiss>&times;</button>
       <div class="modal-grid">
         <div class="modal-left">
-          <img src="book3.jpg" alt="Accepting responsibilities" />
+          <img src="accepting.jpeg" alt="Accepting responsibilities" />
         </div>
         <div class="modal-right">
           <h2 id="modal3-title" class="text-3xl font-bold mb-4">Accepting responsibilities</h2>
           <p class="text-xl text-gray-600 mb-4">N3,000</p>
           <p class="mb-6">Accepting Responsibility richly brings to you a need to understand how the devil operates and how best to live above his device and caprices in life generally and in the home especially.</p>
-          <a href="checkout.html" class="btn-primary px-6 py-3 rounded text-white font-medium inline-block">Purchase Now</a>
+            <button
+                          class="add-to-cart flex items-center justify-center px-3 py-1 rounded bg-transparent text-black text-xs"
+                          data-id="accepting-responsibilities"
+                           data-action="buy-now"
+                          data-title="Accepting responsibilities"
+                          data-price="2500.00"
+                          aria-label="Buy now">
+                          <i class="fas fa-shopping-cart"></i>
+                        </button>
         </div>
       </div>
     </div>
