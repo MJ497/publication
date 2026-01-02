@@ -195,8 +195,19 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
     const pdf = btn.getAttribute('data-pdf') || btn.dataset.pdf || '';
     const id = btn.getAttribute('data-id') || btn.dataset.id || title.replace(/\s+/g,'-').toLowerCase();
 
-    // add to cart object
-    addToCart({ id, title, price, pdf });
+    // try to capture a thumbnail for the cart item. prefer explicit data-thumb, otherwise derive from nearby <img>
+    let thumb = btn.getAttribute('data-thumb') || btn.dataset.thumb || '';
+    if (!thumb) {
+      // look for an image in the same card / parent container
+      let parent = btn.closest('.w-64') || btn.closest('div');
+      if (parent) {
+        const img = parent.querySelector('img');
+        if (img) thumb = img.getAttribute('src') || '';
+      }
+    }
+
+    // add to cart object (include thumb)
+    addToCart({ id, title, price, pdf, thumb });
 
     // if this button had data-action="buy-now" go straight to checkout
     const action = (btn.getAttribute('data-action') || btn.dataset.action || '').toLowerCase();
